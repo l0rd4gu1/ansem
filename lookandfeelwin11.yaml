@@ -1,0 +1,29 @@
+---
+- name: Restaurar WinLook
+  hosts: all
+  become: yes
+  tasks:
+    - name: Copiar al host remoto
+      ansible.builtin.copy:
+        src: /tmp/rwin11/myRestore.tar.bz2
+        dest: /home/rbadmin/myRestore.tar.bz2
+
+    - name: Extraer en el destino
+      ansible.builtin.unarchive:
+        src: /home/rbadmin/myRestore.tar.bz2
+        dest: /home/rbadmin/
+        remote_src: yes
+
+    - name: Ejecutar comando
+      ansible.builtin.command:
+        cmd: /home/rbadmin/myRestore/do_lookandfeel.sh
+      args:
+        chdir: /home/rbadmin/myRestore/  
+
+    - name: Eliminar archivos
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /home/rbadmin/myRestore
+        - /home/rbadmin/myRestore.tar.bz2

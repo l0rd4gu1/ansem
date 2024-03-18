@@ -1,0 +1,14 @@
+---
+- name: Instalar Gnome Shell
+  hosts: all
+  become: true
+  tasks:
+    - name: Actualizar el caché de APT
+      ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600 # Actualiza el caché si es más antiguo de una hora
+
+    - name: Instalar Gnome Shell
+      ansible.builtin.apt:
+        name: gnome-shell-extensions
+        state: present
